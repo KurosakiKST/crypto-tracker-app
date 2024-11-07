@@ -1,4 +1,4 @@
-package com.ryan.cryptotracker.util
+package com.ryan.cryptotracker.core.presentation.util
 
 import com.ryan.cryptotracker.R
 
