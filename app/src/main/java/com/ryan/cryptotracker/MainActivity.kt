@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ryan.cryptotracker.core.domain.util.toString
 import com.ryan.cryptotracker.core.presentation.util.ObserveAsEvents
+import com.ryan.cryptotracker.crypto.presentation.coin_detail.CoinDetailScreen
 import com.ryan.cryptotracker.crypto.presentation.coin_list.CoinListEvent
 import com.ryan.cryptotracker.crypto.presentation.coin_list.CoinListScreen
 import com.ryan.cryptotracker.crypto.presentation.coin_list.CoinListViewModel
@@ -32,21 +33,33 @@ class MainActivity : ComponentActivity() {
 
                     val context = LocalContext.current
 
-                    ObserveAsEvents(events = viewModel.events) {event ->
-                        when(event){
+                    ObserveAsEvents(events = viewModel.events) { event ->
+                        when (event) {
                             is CoinListEvent.Error -> {
                                 Toast.makeText(
                                     context,
                                     event.error.toString(context),
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
-                        
                     }
-                    CoinListScreen(
-                        state = state,
-                        modifier = Modifier.padding(innerPadding),
-                    )
+                    when {
+                        state.selectedCoin != null -> {
+                            CoinDetailScreen(
+                                state = state,
+                                modifier = Modifier.padding(innerPadding),
+                            )
+                        }
+
+                        else -> {
+                            CoinListScreen(
+                                state = state,
+                                modifier = Modifier.padding(innerPadding),
+                                onAction = viewModel::onAction
+                            )
+                        }
+                    }
                 }
             }
         }
